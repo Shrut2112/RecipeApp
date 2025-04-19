@@ -13,9 +13,10 @@ const categories = [
   { id: 10, name: 'Chinese', image: 'https://i.pinimg.com/474x/e0/dd/c0/e0ddc0615de172b35cc1d5b838772c4e.jpg' },
 ];
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [text, setText] = React.useState('');
-  const [category, setcategory] = React.useState('');
+  const [category, setCategory] = React.useState('');
+  const [isVeg, setIsVeg] = React.useState(true); // State for veg/non-veg toggle
 
   return (
     <View style={{ backgroundColor: 'rgb(238, 237, 237)', flex: 1, margin: 10 }}>
@@ -32,18 +33,28 @@ const Home = ({navigation}) => {
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 25 }}>👤</Text>
+          <Pressable onPress={() => navigation.navigate('Profile')}>
+            <Text style={{ fontSize: 25 }}>👤</Text>
+          </Pressable>
         </View>
       </View>
 
-      <View style={styles.searchBox}>
-        <Text style={{ fontSize: 20, paddingHorizontal: 4, paddingRight: 5 }}>🔍</Text>
-        <TextInput
-          placeholder="Enter your fav recipe"
-          style={styles.searctext}
-          value={text}
-          onChangeText={(searchText) => setText(searchText)}
-        />
+      <View style={styles.searchContainer}>
+        <View style={styles.searchBox}>
+          <Text style={{ fontSize: 20, paddingHorizontal: 4, paddingRight: 5 }}>🔍</Text>
+          <TextInput
+            placeholder="Enter your fav recipe"
+            style={styles.searctext}
+            value={text}
+            onChangeText={(searchText) => setText(searchText)}
+          />
+        </View>
+        <Pressable
+          style={[styles.toggleButton, isVeg ? styles.vegButton : styles.nonVegButton]}
+          onPress={() => setIsVeg(!isVeg)}
+        >
+          <Text style={styles.toggleText}>{isVeg ? 'Veg' : 'Non-Veg'}</Text>
+        </Pressable>
       </View>
 
       <View style={styles.Categories}>
@@ -52,10 +63,10 @@ const Home = ({navigation}) => {
           data={categories}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          style={{ height: 100 }} // Explicit height for the horizontal FlatList
+          style={{ height: 100 }}
           renderItem={({ item }) => (
             <View>
-              <Pressable style={styles.category} onPress={() => setcategory(item.name)}>
+              <Pressable style={styles.category} onPress={() => setCategory(item.name)}>
                 <Image source={{ uri: item.image }} style={styles.categoryImage} />
                 <Text style={styles.categoryText}>{item.name}</Text>
                 {category === item.name ? <View style={styles.underline}></View> : null}
@@ -66,11 +77,8 @@ const Home = ({navigation}) => {
         />
       </View>
 
-      {/* category variable ko use kr ke fetch karvao recipes */}
-      {/* search text ko fetch karne ke liye text var use karna*/}
-      
-      <View style={{marginBottom:10}}>
-            <Text style={styles.heading}>Your Recipes are here....</Text>
+      <View style={{ marginBottom: 10 }}>
+        <Text style={styles.heading}>Your Recipes are here....</Text>
       </View>
 
       <FlatList
@@ -78,14 +86,18 @@ const Home = ({navigation}) => {
         numColumns={2}
         renderItem={({ item }) => (
           <View style={styles.recipeBox}>
-            <Pressable onPress={()=> {navigation.navigate('RecipePage',{recipe_name: item.name});}}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate('RecipePage', { recipe_name: item.name });
+              }}
+            >
               <Image source={{ uri: item.image }} style={styles.recipeImage} />
               <Text style={styles.recipeName}>{item.name}</Text>
             </Pressable>
           </View>
         )}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingBottom: 20 }} // Ensures the last item is fully visible
+        contentContainerStyle={{ paddingBottom: 20 }}
       />
     </View>
   );
@@ -94,8 +106,14 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  searchBox: {
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     margin: 15,
+    gap: 10,
+  },
+  searchBox: {
+    flex: 1,
     paddingHorizontal: 10,
     paddingVertical: 2,
     backgroundColor: '#fff',
@@ -106,7 +124,27 @@ const styles = StyleSheet.create({
   },
   searctext: {
     color: 'rgb(93, 98, 90)',
-    fontSize: 17,
+    fontSize: 15,
+    flex: 1,
+  },
+  toggleButton: {
+    width: 90,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  vegButton: {
+    backgroundColor: '#4CAF50', // Green for veg
+  },
+  nonVegButton: {
+    backgroundColor: '#F44336', // Red for non-veg
+  },
+  toggleText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   categoryImage: {
     width: 60,
@@ -137,9 +175,6 @@ const styles = StyleSheet.create({
     color: 'rgb(93, 98, 90)',
     fontWeight: '400',
   },
-  recipeArea: {
-    // No flex properties needed
-  },
   recipeBox: {
     width: '48%',
     alignItems: 'center',
@@ -147,7 +182,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   recipeImage: {
-    width: '150',
+    width: 150,
     height: 180,
     borderRadius: 20,
     resizeMode: 'cover',
@@ -162,6 +197,5 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 14,
     color: 'black',
-    marginTop: 5,
   },
 });
