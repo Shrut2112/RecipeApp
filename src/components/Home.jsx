@@ -1,5 +1,8 @@
 import { StyleSheet, Text, View, TextInput, Image, Pressable, FlatList } from 'react-native';
 import React from 'react';
+import { useEffect,useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SearchIcon from 'react-native-vector-icons/dist/Feather';
 
 const categories = [
   { id: 1, name: 'Breakfast', image: 'https://i.pinimg.com/736x/2e/5e/09/2e5e0947788d245a54a5577d445d622d.jpg' },
@@ -17,31 +20,46 @@ const Home = ({ navigation }) => {
   const [text, setText] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [isVeg, setIsVeg] = React.useState(true); // State for veg/non-veg toggle
+  const [username, setusername] = useState('')
+  const [email, setemail] = useState('')
+  const [image, setimage] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
+
+  useEffect(() => {
+    const getUser =async ()=>{
+        const userData = await AsyncStorage.getItem('user');
+        
+        if(userData){
+          const parsedData = JSON.parse(userData);
+          console.log(parsedData)
+        
+          setusername(parsedData.username)
+          setemail(parsedData.email)
+          setimage(parsedData.image)
+        
+        }
+        else{
+          navigation.navigate('Login');
+        }
+    };
+    getUser();
+  }, []);
+  
 
   return (
     <View style={{ backgroundColor: 'rgb(238, 237, 237)', flex: 1, margin: 10 }}>
       <View style={styles.header}>
-        <Text style={{ fontSize: 20, margin: 10, color: 'rgb(93, 98, 90)' }}>Hi Rishabh!</Text>
-        <View
-          style={{
-            width: 40,
-            alignContent: 'center',
-            height: 40,
-            borderRadius: 50,
-            backgroundColor: '#fff',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+          
+          <Text style={{ fontSize: 20, margin: 10, color: 'rgb(93, 98, 90)' }}>Hi {username}!</Text>
           <Pressable onPress={() => navigation.navigate('Profile')}>
-            <Text style={{ fontSize: 25 }}>👤</Text>
+            <Image source={{uri:image}} style={{height:50,width:50,borderRadius:50,borderColor:'rgb(171, 169, 169)',borderWidth:3}}/>
           </Pressable>
-        </View>
       </View>
 
       <View style={styles.searchContainer}>
         <View style={styles.searchBox}>
-          <Text style={{ fontSize: 20, paddingHorizontal: 4, paddingRight: 5 }}>🔍</Text>
+          <Text style={{ fontSize: 20, paddingHorizontal: 4, paddingRight: 5 }}>
+            <SearchIcon name='search' size={15} color="rgb(93, 98, 90)"/>
+          </Text>
           <TextInput
             placeholder="Enter your fav recipe"
             style={styles.searctext}
