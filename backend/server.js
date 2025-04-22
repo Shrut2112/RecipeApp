@@ -3,16 +3,20 @@ import mongoose from "mongoose"
 import User from "./model/User.js"
 import bodyParser from "body-parser"
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 
 const app = express()
 const port = 3000
+
+dotenv.config(); 
+const mongoUrl = process.env.MONGO_URL;
 
 const saltRound = 10;
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 
 
-mongoose.connect('mongodb://localhost:27017/RecipeApp')
+mongoose.connect(mongoUrl)
 
 app.post('/api/auth/login',async(req,res)=>{
 
