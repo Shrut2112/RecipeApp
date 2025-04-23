@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput, Image, Pressable, FlatList } from 'react-native';
-import React from 'react';
+
 import { useEffect,useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchIcon from 'react-native-vector-icons/dist/Feather';
@@ -17,9 +17,9 @@ const categories = [
 ];
 
 const Home = ({ navigation }) => {
-  const [text, setText] = React.useState('');
-  const [category, setCategory] = React.useState('');
-  const [isVeg, setIsVeg] = React.useState(true); // State for veg/non-veg toggle
+  const [text, setText] = useState('');
+  const [category, setCategory] = useState('');
+  const [isVeg, setIsVeg] = useState(true); // State for veg/non-veg toggle
   const [username, setusername] = useState('')
   const [email, setemail] = useState('')
   const [image, setimage] = useState('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')

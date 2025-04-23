@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, Alert, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -9,7 +9,7 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = async () => {
     if (username && password) {
       console.log(username)
-      const res = await fetch("http://192.168.1.7:3000/api/auth/login",{
+      const res = await fetch("http://192.168.1.6:3000/api/auth/login",{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

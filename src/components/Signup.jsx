@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,10 +14,10 @@ const SignupScreen = ({navigation}) => {
         Alert.alert('Error', 'Passwords do not match');
         // Add your signup logic here (e.g., API call)
       } 
-
+      console.log(username);
       try {
         
-        const res = await fetch('http://192.168.1.7:3000/api/auth/register',{
+        const res = await fetch('http://192.168.1.6:3000/api/auth/register',{
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -39,6 +39,7 @@ const SignupScreen = ({navigation}) => {
           }
 
       } catch (error) {
+        console.log("something went worng")
         Alert.alert('Error', 'Network error: ' + error.message);
       }
     } else {
